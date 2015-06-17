@@ -9,22 +9,30 @@ var Promise = require('es6-promise').Promise,
     $ = require('jquery'),
     Backbone = require('backbone')
 
-sc_url = `https://api.soundcloud.com/oauth2/token`
+var sc_url = `https://api.soundcloud.com/oauth2/token`
     // artist_url = 
 
 
 // Have search route to or from "search_soundcloud"
+// Need to get the album art into the box, and then have it clickable, and have it play the track.
+
 
 SC.initialize({
-    client_id: '5e3fe3759c70fe637cb15bab22e238e0'
+    client_id: '30dd685cbb8d8a53e9fbbec9825fd138'
 });
 
 $(document).ready(function() {
     SC.get('/tracks', {
         genres: '...'
-    }, function(tracks) {
+    },
+     function(tracks) {
         $(tracks).each(function(index, track) {
             $('#results').append($('<li></li>').html(track.title + ' - ' + track.genre));
+            // $('#results').append($('<li></li>').html) // ${user} or something needs to be added
+        });
+        $('...').click(function(e) {
+            e.preventDefault();
+            sound.start();
         });
     });
 });
