@@ -5,22 +5,17 @@ require("es5-shim")
 // es6 polyfills, powered by babel
 require("babel/register")
 
-var Promise = require('es6-promise').Promise
-// just Node?
-// var fetch = require('node-fetch')
-// Browserify?
-// require('whatwg-fetch') //--> not a typo, don't store as a var
+var Promise = require('es6-promise').Promise,
+	$ = require('jquery'),
+	Backbone = require('backbone')
 
-// other stuff that we don't really use in our own code
-// var Pace = require("../bower_components/pace/pace.js")
+// -----------------------------------------------------
 
-// require your own libraries, too!
-// var Router = require('./app.js')
+SC.initialize({
+  client_id: 'ff508288606264cb4f1469b5ba4f23e8'
+}
 
-// window.addEventListener('load', app)
+client_secret: '11c8901be7ac78174059b4fb464c5072'
 
-// function app() {
-    // start app
-    // new Router()
-// }
+
 

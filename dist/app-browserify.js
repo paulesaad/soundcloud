@@ -1,1 +1,1 @@
-
+console.error("SyntaxError: /Users/paulsaad/Github Projects/soundcloud/js/app-browserify.js: Unexpected token (18:0) while parsing file: /Users/paulsaad/Github Projects/soundcloud/js/app-browserify.js");
