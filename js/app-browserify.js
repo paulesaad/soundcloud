@@ -8,7 +8,6 @@ require("babel/register")
 var Promise = require('es6-promise').Promise,
     $ = require('jquery'),
     Backbone = require('backbone')
-
 var sc_url = `https://api.soundcloud.com/oauth2/token`
     // artist_url = 
 
@@ -17,8 +16,16 @@ var sc_url = `https://api.soundcloud.com/oauth2/token`
 // Need to get the album art into the box, and then have it clickable, and have it play the track.
 
 
+// making a promise to make the API accessable?
+// not sure why it's not showing in the console
+
+var SC = new promise(){
+
+}
+
 SC.initialize({
-    client_id: '30dd685cbb8d8a53e9fbbec9825fd138'
+    client_id: '30dd685cbb8d8a53e9fbbec9825fd138',
+    client_secret: '2dedfddff7f92db6b6592728fdcd1b0f'
 });
 
 $(document).ready(function() {
@@ -30,11 +37,29 @@ $(document).ready(function() {
             $('#results').append($('<li></li>').html(track.title + ' - ' + track.genre));
             // $('#results').append($('<li></li>').html) // ${user} or something needs to be added
         });
-        $('...').click(function(e) {
-            e.preventDefault();
-            sound.start();
-        });
+        SC.stream('/tracks/293',function(sound) {
+      $('#start').click(function(e) {
+    e.preventDefault();
+    sound.start();
+  });
     });
+});
+
+$(document).ready(function() {
+    // SC.stream('/tracks/293',function(sound) {
+      $('#buy').click(function(e) {
+    e.preventDefault();
+    console.log("bought");
+	});
+  });
+});
+
+$(document).ready(function() {
+      $('#icon').click(function(e) {
+    e.preventDefault();
+    console.log("bringing you to SoundCloud");
+	});
+  });
 });
 
 /*
@@ -54,8 +79,6 @@ $(document).ready(function() {
 SC.initialize({
   client_id: 'ff508288606264cb4f1469b5ba4f23e8'
 }
-
-client_secret: '11c8901be7ac78174059b4fb464c5072'
 
 
 
