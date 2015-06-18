@@ -134,6 +134,18 @@ $border: rgb(217, 217, 217);
                 vertical-align: top;
                 border-right: 1px solid $border;
                 height: 100%;
+                .album_cover{
+                    margin: auto;
+                    width: 49%;
+                    background-image: url(../images/albumcover.jpg);
+                    background-size: cover;
+                    &::after{
+                        content:'';
+                        display: block;
+                        padding-top: 100%;
+                    }
+
+                }
             }
             .song_details {
                 width:66.7%;
