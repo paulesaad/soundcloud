@@ -91,6 +91,7 @@ img {
  */
 
 $border: rgb(217, 217, 217);
+$orange: rgb(255, 76, 0);
 
 * {
     transition: all .5s ease;
@@ -118,6 +119,12 @@ $border: rgb(217, 217, 217);
             padding: 0.5rem;
         }
     }
+    ul {
+        list-style-type: none;
+        li {
+            margin-bottom: 3rem;
+        }
+    }
     .display {
         width: 800px;
         margin: auto;
@@ -134,17 +141,32 @@ $border: rgb(217, 217, 217);
                 vertical-align: top;
                 border-right: 1px solid $border;
                 height: 100%;
+                position: relative;
                 .album_cover{
-                    margin: auto;
-                    width: 49%;
-                    background-image: url(../images/albumcover.jpg);
-                    background-size: cover;
                     &::after{
                         content:'';
                         display: block;
                         padding-top: 100%;
                     }
-
+                }
+                .playButton {
+                    position: absolute;
+                    width: 30%;
+                    opacity: 0.3;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) rotate(0deg);
+                    cursor: pointer;
+                    &:hover{
+                        opacity: .8;
+                    }
+                    &.playing{
+                        transform: translate(-50%, -50%) rotate(90deg);
+                        opacity: .7;
+                        polygon, path{
+                            fill: $orange;
+                        }
+                    }
                 }
             }
             .song_details {
@@ -230,7 +252,7 @@ $border: rgb(217, 217, 217);
                 flex-grow: 1;
                 display: flex;
                 height: 100%;
-                #icon {
+                .icon {
                     flex-grow: 1;
                     height: 100%;
                     position: relative;
@@ -243,7 +265,7 @@ $border: rgb(217, 217, 217);
                         transform: translate(-50%, -50%);
                     }
                 }
-                #buy {
+                .buy {
                     flex-grow: 1;
                     height: 100%;
                     position: relative;
