@@ -218,6 +218,36 @@ $orange: rgb(255, 76, 0);
                     position: relative;
                     margin:0;
                     width:100%;
+                    .slideBar{
+                        position: relative;
+                        margin: auto;
+                        width: 70%;
+                        height: 100%;
+                        >div{
+                            position: absolute;
+                            top: 50%;
+                            left:0;
+                            transform: translateY(-50%);
+                        }
+                        .bar{
+                            width: 100%;
+                            height: 8px;
+                            border-radius: 3px;
+                            background-color: #efefef;
+                            border: 1px solid $border;
+                        }
+                        .scrubber{
+                            width: 12px;
+                            border-radius: 50%;
+                            background-color: $border;
+
+                            &::after{
+                                content: "";
+                                padding-top: 100%;
+                                display: block;
+                            }
+                        }
+                    }
                     span{
                         position: absolute;
                         transform: translateY(-50%);
@@ -296,10 +326,12 @@ $orange: rgb(255, 76, 0);
                         svg {
                             display: inline-block;
                             width: .5rem;
+
                         }
                         span {
                             display: inline-block;
                             font-size: .6rem;
+                            padding-left: .1rem;
                         }
                     }
                 }

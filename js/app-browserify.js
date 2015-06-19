@@ -50,26 +50,34 @@ class SC_Track extends React.Component {
         this.state = {
             playing: false
         }
-    }
 
-    _toggle(e, data){
-        this.setState({playing: !this.state.playing})
-        if(this.state.playing) {
-            this.state.sound.pause()
-        } else {
-            if(this.state.sound){
-                this.state.sound.play();
-            } else {
-                SC.stream(`/tracks/${data.id}`, (sound) => {
-                    sound.play();
-                    this.setState({sound: sound})
-                })
-            }
+        this.scStatus = {
+             sound: null
         }
     }
 
+    _toggle(e, data){
+
+        //one for the soundcloud!!
+        if(this.state.playing) {
+            this.scStatus.sound.pause()
+        } else {
+            if(this.scStatus.sound){
+                this.scStatus.sound.play();
+            } else {
+                SC.stream(`/tracks/${data.id}`, (sound) => {
+                    sound.play();
+                    this.scStatus.sound = sound
+                })
+            }
+        }
+
+        //another for the DOM!!!
+        this.setState({playing: !this.state.playing})
+
+    }
+
     render(){
-        console.log(this.state)
         var data = this.props.data,
             svgStyle = {
                 color: '#000',
@@ -112,6 +120,10 @@ class SC_Track extends React.Component {
                                 <span>0:00</span>
                                 <svg className="loading" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><g><path d="M59.402,24.168l6.729-18.486c-2.553-0.93-5.206-1.644-7.942-2.123l-3.416,19.379   C56.365,23.217,57.915,23.626,59.402,24.168z"></path><path d="M77.483,50L77.483,50c0,15.178-12.306,27.483-27.483,27.483c-15.179,0-27.483-12.306-27.483-27.483   c0-15.179,12.305-27.483,27.483-27.483V2.849C23.959,2.849,2.849,23.958,2.849,50c0,26.04,21.111,47.151,47.151,47.151   c26.04,0,47.151-21.111,47.151-47.151l0,0H77.483z"></path><path d="M67.663,28.95l12.645-15.068c-2.097-1.76-4.347-3.343-6.729-4.721L63.74,26.201C65.128,27.005,66.442,27.924,67.663,28.95z   "></path><path d="M77.063,45.228l19.379-3.417c-0.479-2.736-1.194-5.39-2.122-7.941l-18.487,6.728   C76.373,42.085,76.782,43.634,77.063,45.228z"></path><path d="M73.799,36.26l17.04-9.838c-1.379-2.383-2.961-4.633-4.721-6.729L71.05,32.337C72.076,33.558,72.994,34.871,73.799,36.26z"></path></g></svg>
                                 <span className="hidden">3:30</span>
+                                <div className="slideBar">
+                                    <div className="bar"></div>
+                                    <div className="scrubber"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
