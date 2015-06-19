@@ -98,25 +98,47 @@ $orange: rgb(255, 76, 0);
     font-family: 'Roboto', sans-serif;
 }
 
+input {
+    border: none;
+    border-bottom: solid 2px #c9c9c9;
+    border-radius: 15px;
+    transition: border 0.3s;
+    margin-left: 10px;
+    background-color: #DCDCDD;
+    appearance: none;
+    box-shadow: none;
+}
+
 .hidden{
     opacity: 0;
 }
 
 .container {
     min-width: 800px;
+    user-select: none;
     .toolbar {
         width: 100%;
-        background-color: #ccc;
+        background-color: #1C1D1E;
         margin-bottom: 3rem;
-        svg {
-            width: 2.5rem;
-            display: inline-block;
-            vertical-align: top;
-        }
+        padding-left: 30%;
         form {
             display: inline-block;
             vertical-align: top;
             padding: 0.5rem;
+            label{
+                color: $orange;
+                opacity: .7;
+            }
+        }
+        .scSvg {
+            width: 2.5rem;
+            display: inline-block;
+            vertical-align: top;
+            fill: #C5C3C6;
+            transition: .2s ease all;
+            &:hover{
+                fill: $orange;
+            }
         }
     }
     ul {
