@@ -10,7 +10,8 @@ var Promise = require('es6-promise').Promise,
     Backbone = require('backbone'),
     React = require('react'),
     sc_key = '5e3fe3759c70fe637cb15bab22e238e0',
-    sc_url = `https://api.soundcloud.com/tracks?client_id=${sc_key}`
+    sc_url = `https://api.soundcloud.com/tracks?client_id=${sc_key}`,
+    qs = (s, d) => (d || document).querySelector(s)
 
 
 SC.initialize({
@@ -33,30 +34,59 @@ tracks.fetch()
 // var matt_playlist = playlists/4759628
 
 
-// class searchList extends React.Component {
-//     constructor(){
-//         super(props)
-//     }
+class Lover extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            loved: false
+        }
+    }
 
-//     render(){
+    _addToLoves(e){
+        if(this.state.loved){
+            this.props.data.likes_count -= 1
+        } else {
+            this.props.data.likes_count += 1
+        }
+        this.setState({loved: !this.state.loved})
+    }
 
-//     }
-// }
+    render(){
+        var lovingThis = this.state.loved ? <svg className="loveFelt" onClick={(e)=>this._addToLoves(e)} version="1.1" x="0px" y="0px" viewBox="-12.058 0.441 100 87.501" enable-background="new -12.058 0.441 100 87.501">
+                                    <path d="M0.441,50.606c-8.714-8.552-12.499-17.927-12.499-26.316c0-14.308,9.541-23.849,24.011-23.849
+                                    c13.484,0,18.096,6.252,25.989,15.297C45.836,6.693,50.44,0.441,63.925,0.441c14.477,0,24.018,9.541,24.018,23.849
+                                    c0,8.389-3.784,17.765-12.498,26.316L37.942,87.942L0.441,50.606z"></path></svg> : <svg onClick={(e)=>this._addToLoves(e)} version="1.1" x="0px" y="0px" viewBox="-12.058 0.441 100 87.501" enable-background="new -12.058 0.441 100 87.501">
+                                    <path d="M0.441,50.606c-8.714-8.552-12.499-17.927-12.499-26.316c0-14.308,9.541-23.849,24.011-23.849
+                                    c13.484,0,18.096,6.252,25.989,15.297C45.836,6.693,50.44,0.441,63.925,0.441c14.477,0,24.018,9.541,24.018,23.849
+                                    c0,8.389-3.784,17.765-12.498,26.316L37.942,87.942L0.441,50.606z"></path></svg>
+        return (<span>
+            {lovingThis}
+            <span>{this.props.data.likes_count}</span>
+            </span> )
+    }
+}
 
 class SC_Track extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            playing: false
+            playing: false,
+            position: 0
         }
 
         this.scStatus = {
-             sound: null
+            sound: null,
+            duration: null
         }
     }
 
-    _toggle(e, data){
+    lapsedTime() {
+        if (this.scStatus.sound) {
+            this.setState({position: this.scStatus.sound.getCurrentPosition()})
+        }
+    }
 
+    _toggle(e){
         //one for the soundcloud!!
         if(this.state.playing) {
             this.scStatus.sound.pause()
@@ -64,16 +94,16 @@ class SC_Track extends React.Component {
             if(this.scStatus.sound){
                 this.scStatus.sound.play();
             } else {
-                SC.stream(`/tracks/${data.id}`, (sound) => {
-                    sound.play();
+                SC.stream(`/tracks/${this.props.data.id}`, (sound) => {
+                    sound.play()
                     this.scStatus.sound = sound
+                    this.scStatus.duration = sound.duration
+                    console.log(sound)
                 })
             }
         }
-
         //another for the DOM!!!
         this.setState({playing: !this.state.playing})
-
     }
 
     render(){
@@ -90,9 +120,9 @@ class SC_Track extends React.Component {
                 backgroundImage: `url(${imgUrl})`,
                 backgroundSize: "cover"
             },
-            x = this.state.playing ? <svg onClick={(e)=>this._toggle(e, data)} className="playButton playing" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path fill="#010101" d="M50,0.005c-0.432,0-0.858-0.011-1.287,0C21.695,0.689,0,22.821,0,50.002C0,77.615,22.386,100,50,100
+            x = this.state.playing ? <svg onClick={(e)=>this._toggle(e)} className="playButton playing" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path fill="#010101" d="M50,0.005c-0.432,0-0.858-0.011-1.287,0C21.695,0.689,0,22.821,0,50.002C0,77.615,22.386,100,50,100
                                 s50-22.385,50-49.997C100,22.39,77.614,0.005,50,0.005z M50,90c-22.091,0-40-17.906-40-39.997c0-22.09,17.909-39.998,40-39.998
-                                c22.092,0,40,17.908,40,39.998C90,72.093,72.092,90,50,90z"></path><polygon fill="#010101" points="35.857,79.41 76.824,50 35.647,20.59 "></polygon></svg> : <svg onClick={(e)=>this._toggle(e, data)} className="playButton" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path fill="#010101" d="M50,0.005c-0.432,0-0.858-0.011-1.287,0C21.695,0.689,0,22.821,0,50.002C0,77.615,22.386,100,50,100
+                                c22.092,0,40,17.908,40,39.998C90,72.093,72.092,90,50,90z"></path><polygon fill="#010101" points="35.857,79.41 76.824,50 35.647,20.59 "></polygon></svg> : <svg onClick={(e)=>this._toggle(e)} className="playButton" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path fill="#010101" d="M50,0.005c-0.432,0-0.858-0.011-1.287,0C21.695,0.689,0,22.821,0,50.002C0,77.615,22.386,100,50,100
                                 s50-22.385,50-49.997C100,22.39,77.614,0.005,50,0.005z M50,90c-22.091,0-40-17.906-40-39.997c0-22.09,17.909-39.998,40-39.998
                                 c22.092,0,40,17.908,40,39.998C90,72.093,72.092,90,50,90z"></path><polygon fill="#010101" points="35.857,79.41 76.824,50 35.647,20.59 "></polygon></svg>
 
@@ -116,9 +146,9 @@ class SC_Track extends React.Component {
                                 <p>{data.user.username}</p>
                             </div>
                             <div className="completion">
-                                <span>0:00</span>
-                                <svg className="loading" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><g><path d="M59.402,24.168l6.729-18.486c-2.553-0.93-5.206-1.644-7.942-2.123l-3.416,19.379   C56.365,23.217,57.915,23.626,59.402,24.168z"></path><path d="M77.483,50L77.483,50c0,15.178-12.306,27.483-27.483,27.483c-15.179,0-27.483-12.306-27.483-27.483   c0-15.179,12.305-27.483,27.483-27.483V2.849C23.959,2.849,2.849,23.958,2.849,50c0,26.04,21.111,47.151,47.151,47.151   c26.04,0,47.151-21.111,47.151-47.151l0,0H77.483z"></path><path d="M67.663,28.95l12.645-15.068c-2.097-1.76-4.347-3.343-6.729-4.721L63.74,26.201C65.128,27.005,66.442,27.924,67.663,28.95z   "></path><path d="M77.063,45.228l19.379-3.417c-0.479-2.736-1.194-5.39-2.122-7.941l-18.487,6.728   C76.373,42.085,76.782,43.634,77.063,45.228z"></path><path d="M73.799,36.26l17.04-9.838c-1.379-2.383-2.961-4.633-4.721-6.729L71.05,32.337C72.076,33.558,72.994,34.871,73.799,36.26z"></path></g></svg>
-                                <span className="hidden">3:30</span>
+                                <span>{this.state.position}</span>
+                                <svg className="loading spinning hidden" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><g><path d="M59.402,24.168l6.729-18.486c-2.553-0.93-5.206-1.644-7.942-2.123l-3.416,19.379   C56.365,23.217,57.915,23.626,59.402,24.168z"></path><path d="M77.483,50L77.483,50c0,15.178-12.306,27.483-27.483,27.483c-15.179,0-27.483-12.306-27.483-27.483   c0-15.179,12.305-27.483,27.483-27.483V2.849C23.959,2.849,2.849,23.958,2.849,50c0,26.04,21.111,47.151,47.151,47.151   c26.04,0,47.151-21.111,47.151-47.151l0,0H77.483z"></path><path d="M67.663,28.95l12.645-15.068c-2.097-1.76-4.347-3.343-6.729-4.721L63.74,26.201C65.128,27.005,66.442,27.924,67.663,28.95z   "></path><path d="M77.063,45.228l19.379-3.417c-0.479-2.736-1.194-5.39-2.122-7.941l-18.487,6.728   C76.373,42.085,76.782,43.634,77.063,45.228z"></path><path d="M73.799,36.26l17.04-9.838c-1.379-2.383-2.961-4.633-4.721-6.729L71.05,32.337C72.076,33.558,72.994,34.871,73.799,36.26z"></path></g></svg>
+                                <span className="countbackTime">{this.state.getCurrentPosition}</span>
                                 <div className="slideBar">
                                     <div className="bar"></div>
                                     <div className="scrubber"></div>
@@ -138,7 +168,7 @@ class SC_Track extends React.Component {
 
                         <div className="below_song_details">
                             <div className="times_played">
-
+                                
                                 <div>
                                     <svg version="1.1" x="0px" y="0px" viewBox="0 0 100 100" style={svgStyle}><path d="M50,0C22.388,0,0,22.388,0,50s22.388,50,50,50s50-22.388,50-50S77.612,0,50,0z M31.25,75V25  l50.024,25L31.25,75z" fill="#010101"></path></svg>
                                     <span>{data.playback_count}</span>
@@ -146,11 +176,7 @@ class SC_Track extends React.Component {
                             </div>
                             <div className="loves">
                                 <div>
-                                    <svg version="1.1" x="0px" y="0px" viewBox="-12.058 0.441 100 87.501" enable-background="new -12.058 0.441 100 87.501">
-                                    <path d="M0.441,50.606c-8.714-8.552-12.499-17.927-12.499-26.316c0-14.308,9.541-23.849,24.011-23.849
-                                    c13.484,0,18.096,6.252,25.989,15.297C45.836,6.693,50.44,0.441,63.925,0.441c14.477,0,24.018,9.541,24.018,23.849
-                                    c0,8.389-3.784,17.765-12.498,26.316L37.942,87.942L0.441,50.606z"></path></svg>
-                                    <span>{data.likes_count}</span>
+                                    <Lover data={data}/>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +195,6 @@ class App extends React.Component {
 
     render(){
         var list = this.props.collection.toJSON()
-        console.log(list)
         return (
             <div>
                 <div className="toolbar">

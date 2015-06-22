@@ -348,7 +348,10 @@ input {
                         svg {
                             display: inline-block;
                             width: .5rem;
-
+                            transition: 0.2s ease all;
+                            &.loveFelt{
+                                fill: $orange;
+                            }
                         }
                         span {
                             display: inline-block;
@@ -361,3 +364,18 @@ input {
         }
     }
 }
+
+.spinning{
+     animation: spin .5s infinite linear;
+
+}
+
+@keyframes spin{
+  0% {
+    transform: translate(50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(50%, -50%) rotate(360deg);
+  }
+}
+
